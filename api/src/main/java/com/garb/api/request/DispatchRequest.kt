@@ -1,7 +1,5 @@
 package com.garb.api.request
 
-import com.garb.api.models.OrderPosSaveModel
-
 data class DispatchRequest(
     val idOrder: Long = 0,
     val selectedInventory: MutableList<SelectedInventory?>? = null
