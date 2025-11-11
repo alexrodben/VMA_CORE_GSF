@@ -27,9 +27,9 @@ android {
 }
 
 kotlin {
+    jvmToolchain(11)
     target {
         compilerOptions {
-            optIn.add("kotlin.RequiresOptIn")
             freeCompilerArgs = listOf("-XXLanguage:+PropertyParamAnnotationDefaultTargetMode")
         }
     }

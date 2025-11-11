@@ -30,11 +30,7 @@ android {
 }
 
 kotlin {
-    target {
-        compilerOptions {
-            optIn.add("kotlin.RequiresOptIn")
-        }
-    }
+    jvmToolchain(11)
 }
 
 dependencies {
