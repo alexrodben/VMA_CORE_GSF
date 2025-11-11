@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "VMA CORE GSF"
 include(":app")
- 
+include(":api")
