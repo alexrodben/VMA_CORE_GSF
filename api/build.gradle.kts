@@ -1,8 +1,13 @@
+import java.util.Locale
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     id("maven-publish")
 }
+
+group = "com.github.alexrodben"
+version = "1.0.3"
 
 android {
     namespace = "com.garb.api"
@@ -60,15 +65,17 @@ dependencies {
 afterEvaluate {
     publishing {
         publications {
-            create<MavenPublication>("release") {
-                from(components["release"])
-                groupId = "com.github.alexrodben"
-                artifactId = "api"
-                version = "1.0.2"
+            if (!publications.names.contains("release")) {
+                create<MavenPublication>("release") {
+                    from(components["release"])
+                    groupId = project.group.toString()
+                    artifactId = project.name
+                    version = project.version.toString()
 
-                pom {
-                    name.set("Garb API")
-                    description.set("Librería API para vending machine")
+                    pom {
+                        name.set("Garb ${project.name.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }}")
+                        description.set("Módulo ${project.name} de la vending machine")
+                    }
                 }
             }
         }

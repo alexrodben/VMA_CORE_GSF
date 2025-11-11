@@ -19,7 +19,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "VMA CORE GSF"
+rootProject.name = "VMA_CORE_GSF"
 include(":app")
 include(":api")
 include(":core")
