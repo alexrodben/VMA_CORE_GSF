@@ -1,6 +1,6 @@
 package com.garb.api.models
 
-open data class InvoiceNitModel(
+data class InvoiceNitModel(
     val tin: String? = null,
     val name: String? = null,
     val email: String? = null,
