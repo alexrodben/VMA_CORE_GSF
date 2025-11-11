@@ -4,8 +4,6 @@ plugins {
     id("maven-publish")
 }
 
-version = "1.0.1"
-
 android {
     namespace = "com.garb.api"
     compileSdk = 36
@@ -24,8 +22,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     publishing {
         singleVariant("release") {
@@ -35,7 +33,7 @@ android {
 }
 
 kotlin {
-    jvmToolchain(11)
+    jvmToolchain(17)
     target {
         compilerOptions {
             freeCompilerArgs = listOf("-XXLanguage:+PropertyParamAnnotationDefaultTargetMode")
@@ -57,4 +55,22 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.logging.interceptor)
 
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication>("release") {
+                from(components["release"])
+                groupId = "com.github.alexrodben"
+                artifactId = "api"
+                version = "1.0.3"
+
+                pom {
+                    name.set("Garb API")
+                    description.set("Librería API para vending machine")
+                }
+            }
+        }
+    }
 }
