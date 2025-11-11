@@ -64,7 +64,7 @@ afterEvaluate {
                 from(components["release"])
                 groupId = "com.github.alexrodben"
                 artifactId = "api"
-                version = "1.0.3"
+                version = "1.0.2"
 
                 pom {
                     name.set("Garb API")

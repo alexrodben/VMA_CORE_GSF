@@ -3,9 +3,6 @@ plugins {
     alias(libs.plugins.kotlin.android)
     id("maven-publish")
 }
-
-version = "1.0.1"
-
 android {
     namespace = "com.garb.core"
     compileSdk = 36
@@ -55,7 +52,7 @@ afterEvaluate {
                 from(components["release"])
                 groupId = "com.github.alexrodben"
                 artifactId = "core"
-                version = "1.0.3"
+                version = "1.0.2"
 
                 pom {
                     name.set("Garb API")
