@@ -1,13 +1,8 @@
-import java.util.Locale
-
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     id("maven-publish")
 }
-
-group = "com.github.alexrodben"
-version = "1.0.3"
 
 android {
     namespace = "com.garb.core"
