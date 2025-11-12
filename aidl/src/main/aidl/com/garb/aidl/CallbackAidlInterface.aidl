@@ -1,5 +1,5 @@
 // CallbackAidlInterface.aidl
-package com.garb.aidl_core;
+package com.garb.aidl;
 
 interface CallbackAidlInterface {
     void onProgress(int percentage, String message);

@@ -1,4 +1,4 @@
 // VendingDispatchItem.aidl
-package com.garb.aidl_core;
+package com.garb.aidl;
 
 parcelable VendingDispatchItem;

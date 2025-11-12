@@ -47,23 +47,3 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }
-
-afterEvaluate {
-    publishing {
-        publications {
-            if (!publications.names.contains("release")) {
-                create<MavenPublication>("release") {
-                    from(components["release"])
-                    groupId = project.group.toString()
-                    artifactId = project.name
-                    version = project.version.toString()
-
-                    pom {
-                        name.set("Garb ${project.name.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }}")
-                        description.set("Módulo ${project.name} de la vending machine")
-                    }
-                }
-            }
-        }
-    }
-}

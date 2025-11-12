@@ -1,10 +1,11 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
+    id("maven-publish")
 }
 
 android {
-    namespace = "com.garb.aidl_core"
+    namespace = "com.garb.aidl"
     compileSdk = 36
 
     defaultConfig {
@@ -22,17 +23,20 @@ android {
         buildConfig = true
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+        }
     }
 }
 
 kotlin {
-    compilerOptions {
-        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
-    }
+    jvmToolchain(17)
 }
 
 dependencies {
-    testImplementation("junit:junit:4.13.2")
+    testImplementation(libs.junit)
 }

@@ -1,8 +1,8 @@
 // VendingAidlInterface.aidl
-package com.garb.aidl_core;
+package com.garb.aidl;
 
-import com.garb.aidl_core.CallbackAidlInterface;
-import com.garb.aidl_core.VendingDispatchItem;
+import com.garb.aidl.CallbackAidlInterface;
+import com.garb.aidl.VendingDispatchItem;
 
 interface VendingAidlInterface {
     String temperature();
