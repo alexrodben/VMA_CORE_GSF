@@ -3,4 +3,4 @@ jdk:
 before_install:
   - echo "Using Java 17 for Android build"
 install:
-  - ./gradlew clean :core:assembleRelease :core:publishToMavenLocal :api:assembleRelease :api:publishToMavenLocal
+  - ./gradlew clean :core:assembleRelease :core:publishToMavenLocal :api:assembleRelease :api:publishToMavenLocal :aidl:assembleRelease :aidl:publishToMavenLocal
