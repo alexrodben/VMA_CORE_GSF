@@ -1,5 +1,6 @@
 package com.garb.core
 
+import android.content.SharedPreferences
 import android.os.Environment
 import android.text.TextUtils
 import android.util.Log
@@ -15,7 +16,10 @@ import java.util.logging.Level
 import kotlin.io.use
 
 object CustomLogger {
-    private const val DIRECTORY = "/vending/driver/logs/"
+    private lateinit var directory: String
+    fun init(folder: String? = null) {
+        directory = "/vending/${folder ?: "driver"}/logs/"
+    }
 
     fun info(message: String) {
         val stackTrace = Thread.currentThread().getStackTrace()[3]
@@ -70,7 +74,7 @@ object CustomLogger {
             System.err.println("Logger error: -createFolder- " + e.message)
             File(System.getProperty("java.io.tmpdir") ?: "/tmp")
         }
-        var folderPath = File(baseDir, DIRECTORY + dateString).path
+        var folderPath = File(baseDir, directory + dateString).path
         if (fileCustomName != null) folderPath += "/$fileCustomName"
         val folder = File(folderPath)
         if (!folder.exists()) {
@@ -119,3 +123,7 @@ object CustomLogger {
         }
     }
 }
+
+/*
+    LocalPreferences.init(this)
+ */

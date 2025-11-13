@@ -44,6 +44,6 @@ object LocalPreferences {
 }
 
 /*
-        LocalPreferences.init(this)
+    LocalPreferences.init(this)
  */
 
