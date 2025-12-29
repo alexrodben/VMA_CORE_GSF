@@ -1,7 +1,5 @@
 package com.garb.core
 
-import android.content.SharedPreferences
-import android.os.Environment
 import android.text.TextUtils
 import android.util.Log
 import java.io.File
@@ -13,13 +11,23 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.logging.Level
-import kotlin.io.use
+
+/**
+ * Clase helper para manejo de Logger globales.
+ *
+ * CustomLogger.init(baseDir = getExternalFilesDir(null)!!, folder = "driver")
+ */
 
 object CustomLogger {
-    private lateinit var directory: String
-    fun init(folder: String? = null) {
-        directory = "/vending/${folder ?: "driver"}/logs/"
+    private var warned = false
+    private var baseDir: File? = null
+    private var subFolder: String = "driver"
+
+    fun init(baseDir: File, folder: String? = null) {
+        this.subFolder = folder ?: "globlal"
+        this.baseDir = baseDir
     }
+
 
     fun info(message: String) {
         val stackTrace = Thread.currentThread().getStackTrace()[3]
@@ -30,7 +38,7 @@ object CustomLogger {
     fun debug(message: String) {
         val stackTrace = Thread.currentThread().getStackTrace()[3]
         val f = "${stackTrace.fileName}:${stackTrace.lineNumber}.${stackTrace.methodName}"
-        log(stackTrace.className, Level.OFF, f, message, null, null)
+        log(stackTrace.className, Level.FINE, f, message, null, null)
     }
 
     fun warn(message: String) {
@@ -45,12 +53,24 @@ object CustomLogger {
         log(stackTrace.className, Level.SEVERE, f, message, throwable, "error")
     }
 
-    private fun log(tag: String, level: Level, function: String, message: String, throwable: Throwable?, fileCustomName: String?) {
+    private fun log(
+        tag: String,
+        level: Level,
+        function: String,
+        message: String,
+        throwable: Throwable?,
+        fileCustomName: String?
+    ) {
         if (TextUtils.isEmpty(message)) return
-        val formattedMessage: String = formatLogMessage(tag, level, function, message, throwable)
+        val formattedMessage = formatLogMessage(function, message, throwable)
+        logToAndroid(level, tag, formattedMessage)
+        if (baseDir == null) {
+            Log.e("CustomLogger", "CustomLogger.init(...) NO fue llamado")
+            return
+        }
         val formattedCompleteMessage: String = formatCompleteLogMessage(tag, level, formattedMessage)
-        if (fileCustomName != null) writeToFile(formattedCompleteMessage, fileCustomName)
         if (level != Level.OFF) writeToFile(formattedCompleteMessage, null)
+        if (fileCustomName != null) writeToFile(formattedCompleteMessage, fileCustomName)
     }
 
     private fun writeToFile(message: String, fileCustomName: String?) {
@@ -64,36 +84,33 @@ object CustomLogger {
         writeFile(filePath, message)
     }
 
+    private fun getBaseDirOrNull(): File? {
+        if (baseDir == null && !warned) {
+            warned = true
+            Log.w("CustomLogger", "CustomLogger no inicializado. Llamar CustomLogger.init(...) en Application")
+        }
+        return baseDir
+    }
+
     private fun createFolder(now: Date, fileCustomName: String?): String {
-        // Crear la carpeta del dia si no existe
         val sdfDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val dateString = sdfDate.format(now)
-        val baseDir: File = try {
-            Environment.getExternalStorageDirectory()
-        } catch (e: Exception) {
-            System.err.println("Logger error: -createFolder- " + e.message)
-            File(System.getProperty("java.io.tmpdir") ?: "/tmp")
-        }
-        var folderPath = File(baseDir, directory + dateString).path
-        if (fileCustomName != null) folderPath += "/$fileCustomName"
-        val folder = File(folderPath)
-        if (!folder.exists()) {
-            if (folder.mkdirs()) {
-                println("Logger info: -writeToFile- Directorio creado: $folderPath")
-            }
-        }
-        return folderPath
+        val base = getBaseDirOrNull() ?: return ""
+        var folder = File(base, "vending/$subFolder/logs/$dateString")
+        if (fileCustomName != null) folder = File(folder, fileCustomName)
+        if (!folder.exists()) folder.mkdirs()
+        return folder.path
     }
 
     private fun writeFile(filePath: String, message: String) {
         val file = File(filePath)
         try {
             if (!file.exists()) {
-                if (file.createNewFile()) {
-                    println("Logger info: -writeToFile- Archivo creado: $filePath")
-                }
+                if (file.createNewFile()) println("Logger info: -writeToFile- Archivo creado: $filePath")
             }
-            OutputStreamWriter(FileOutputStream(file, true), StandardCharsets.UTF_8).use { writer -> writer.write(message) }
+            OutputStreamWriter(FileOutputStream(file, true), StandardCharsets.UTF_8).use { writer ->
+                writer.write(message)
+            }
         } catch (e: IOException) {
             System.err.println("Logger error: -writeToFile- " + e.message)
         }
@@ -106,10 +123,9 @@ object CustomLogger {
         return timestamp + " - [" + level.name + "]" + " *" + tag + "* " + message
     }
 
-    private fun formatLogMessage(tag: String, level: Level, function: String, message: String, throwable: Throwable?): String {
+    private fun formatLogMessage(function: String, message: String, throwable: Throwable?): String {
         val sb = kotlin.text.StringBuilder().append(function).append(": ").append(message).append("\n")
         if (throwable != null) sb.append(Log.getStackTraceString(throwable))
-        logToAndroid(level, tag, sb.toString())
         return sb.toString()
     }
 
@@ -123,7 +139,3 @@ object CustomLogger {
         }
     }
 }
-
-/*
-    LocalPreferences.init(this)
- */

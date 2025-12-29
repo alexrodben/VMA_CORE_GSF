@@ -8,6 +8,8 @@ import androidx.core.content.edit
  * Clase helper para manejo de SharedPreferences globales.
  * Usa el APPLICATION_ID como nombre de archivo para evitar conflictos.
  * Implementa SharedPreferences delegando la mayoría de métodos al prefs real.
+ *
+ * LocalPreferences.init(this)
  */
 object LocalPreferences {
     private lateinit var prefs: SharedPreferences
@@ -42,8 +44,3 @@ object LocalPreferences {
         }
     }
 }
-
-/*
-    LocalPreferences.init(this)
- */
-
